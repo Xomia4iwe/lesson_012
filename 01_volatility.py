@@ -73,4 +73,39 @@
 #     def run(self):
 #         <обработка данных>
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+import csv
+import os
+
+scan_folder = 'trades'
+max_volatility = []
+min_volatility = []
+zero_volatility = []
+volatility_list = []
+for dirpath, dirnames, filenames in os.walk(scan_folder):
+    for file in filenames:
+        file_path = os.path.join(dirpath, file)
+        max_number = float(0)
+        min_number = float(999999999999)
+        with open(file=file_path, encoding='utf-8') as r_file:
+            file_reader = csv.DictReader(r_file, delimiter=",")
+            for row in file_reader:
+                if float(row["PRICE"]) > max_number:
+                    max_number = float(row["PRICE"])
+                if float(row["PRICE"]) < min_number:
+                    min_number = float(row["PRICE"])
+            average_price = (max_number + min_number) / 2
+            volatility = (max_number - min_number) / average_price * 100
+            if volatility == 0:
+                zero_volatility.append([row["SECID"], volatility])
+            else:
+                volatility_list.append([row["SECID"], volatility])
+    volatility_list.sort(key=lambda x: x[1], reverse=True)
+print('Максимальная волатильность:')
+for i in range(3):
+    print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+print('Минимальная волатильность:')
+for i in range(-3, 0):
+    print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+print('Нулевая волатильность:')
+for i in range(len(zero_volatility)):
+    print(f'{zero_volatility[i][0]}', end=', ')
