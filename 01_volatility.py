@@ -76,36 +76,53 @@
 import csv
 import os
 
-scan_folder = 'trades'
-max_volatility = []
-min_volatility = []
-zero_volatility = []
-volatility_list = []
-for dirpath, dirnames, filenames in os.walk(scan_folder):
-    for file in filenames:
-        file_path = os.path.join(dirpath, file)
-        max_number = float(0)
-        min_number = float(999999999999)
-        with open(file=file_path, encoding='utf-8') as r_file:
-            file_reader = csv.DictReader(r_file, delimiter=",")
-            for row in file_reader:
-                if float(row["PRICE"]) > max_number:
-                    max_number = float(row["PRICE"])
-                if float(row["PRICE"]) < min_number:
-                    min_number = float(row["PRICE"])
-            average_price = (max_number + min_number) / 2
-            volatility = (max_number - min_number) / average_price * 100
-            if volatility == 0:
-                zero_volatility.append([row["SECID"], volatility])
-            else:
-                volatility_list.append([row["SECID"], volatility])
-    volatility_list.sort(key=lambda x: x[1], reverse=True)
+
+class Volatility:
+
+    def __init__(self, scan_folder):
+        self.scan_folder = scan_folder
+        self.max_volatility = []
+        self.min_volatility = []
+        self.zero_volatility = []
+        self.volatility_list = []
+
+    def run(self):
+        for file_path in self.get_file_path(scan_folder=self.scan_folder):
+            max_number = float(0)
+            min_number = float(999999999999)
+            with open(file=file_path, encoding='utf-8') as r_file:
+                file_reader = csv.DictReader(r_file, delimiter=",")
+                for row in file_reader:
+                    if float(row["PRICE"]) > max_number:
+                        max_number = float(row["PRICE"])
+                    if float(row["PRICE"]) < min_number:
+                        min_number = float(row["PRICE"])
+                average_price = (max_number + min_number) / 2
+                volatility = (max_number - min_number) / average_price * 100
+                if volatility == 0:
+                    self.zero_volatility.append([row["SECID"], volatility])
+                else:
+                    self.volatility_list.append([row["SECID"], volatility])
+
+    def volatility_sort(self):
+        return self.volatility_list.sort(key=lambda x: x[1], reverse=True)
+
+    def get_file_path(self, scan_folder):
+        for dirpath, dirnames, filenames in os.walk(scan_folder):
+            for file in filenames:
+                yield os.path.join(dirpath, file)
+
+
+scan_folder = '/home/xomia4iwe/projects/My_Projects/lesson_012/trades/'
+volatility = Volatility(scan_folder=scan_folder)
+volatility.run()
+volatility.volatility_sort()
 print('Максимальная волатильность:')
 for i in range(3):
-    print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+    print(f'{volatility.volatility_list[i][0]}  -  {volatility.volatility_list[i][1]}')
 print('Минимальная волатильность:')
 for i in range(-3, 0):
-    print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+    print(f'{volatility.volatility_list[i][0]}  -  {volatility.volatility_list[i][1]}')
 print('Нулевая волатильность:')
-for i in range(len(zero_volatility)):
-    print(f'{zero_volatility[i][0]}', end=', ')
+for i in range(len(volatility.zero_volatility)):
+    print(f'{volatility.zero_volatility[i][0]}', end=', ')
