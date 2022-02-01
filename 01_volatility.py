@@ -114,6 +114,8 @@ class Volatility:
 
 
 scan_folder = '/home/xomia4iwe/projects/My_Projects/lesson_012/trades/'
+
+
 @time_track
 def main():
     volatility = Volatility(scan_folder=scan_folder)
