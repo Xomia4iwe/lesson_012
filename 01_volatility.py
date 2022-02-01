@@ -76,13 +76,13 @@
 import csv
 import os
 
+from utils import time_track
+
 
 class Volatility:
 
     def __init__(self, scan_folder):
         self.scan_folder = scan_folder
-        self.max_volatility = []
-        self.min_volatility = []
         self.zero_volatility = []
         self.volatility_list = []
 
@@ -114,15 +114,21 @@ class Volatility:
 
 
 scan_folder = '/home/xomia4iwe/projects/My_Projects/lesson_012/trades/'
-volatility = Volatility(scan_folder=scan_folder)
-volatility.run()
-volatility.volatility_sort()
-print('Максимальная волатильность:')
-for i in range(3):
-    print(f'{volatility.volatility_list[i][0]}  -  {volatility.volatility_list[i][1]}')
-print('Минимальная волатильность:')
-for i in range(-3, 0):
-    print(f'{volatility.volatility_list[i][0]}  -  {volatility.volatility_list[i][1]}')
-print('Нулевая волатильность:')
-for i in range(len(volatility.zero_volatility)):
-    print(f'{volatility.zero_volatility[i][0]}', end=', ')
+@time_track
+def main():
+    volatility = Volatility(scan_folder=scan_folder)
+    volatility.run()
+    volatility.volatility_sort()
+    print('Максимальная волатильность:')
+    for i in range(3):
+        print(f'{volatility.volatility_list[i][0]}  -  {round(volatility.volatility_list[i][1], 2)} %')
+    print('Минимальная волатильность:')
+    for i in range(-3, 0):
+        print(f'{volatility.volatility_list[i][0]}  -  {round(volatility.volatility_list[i][1], 2)} %')
+    print('Нулевая волатильность:')
+    for i in range(len(volatility.zero_volatility)):
+        print(f'{volatility.zero_volatility[i][0]}', end=', ')
+
+
+if __name__ == '__main__':
+    main()
