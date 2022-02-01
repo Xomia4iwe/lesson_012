@@ -9,6 +9,7 @@ def time_track(func):
 
         ended_at = time.time()
         elapsed = round(ended_at - started_at, 4)
-        print(f'Функция работала {elapsed} секунд(ы)')
+        print(f'\nФункция работала {elapsed} секунд(ы)')
         return result
+
     return surrogate
