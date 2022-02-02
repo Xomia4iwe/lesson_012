@@ -71,7 +71,8 @@ def main():
         except Empty:
             if not any(volatility.is_alive() for volatility in volatilitys):
                 break
-
+    for volatility in volatilitys:
+        volatility.join()
     volatility_list.sort(key=lambda x: x[1], reverse=True)
     print('Максимальная волатильность:')
     for i in range(3):
