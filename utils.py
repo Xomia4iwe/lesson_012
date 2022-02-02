@@ -1,3 +1,4 @@
+import os
 import time
 
 
@@ -13,3 +14,13 @@ def time_track(func):
         return result
 
     return surrogate
+
+
+def get_file_path(scan_folder):
+    file_path = []
+    for dirpath, dirnames, filenames in os.walk(scan_folder):
+        for file in filenames:
+            file_path.append(os.path.join(dirpath, file))
+    return file_path
+
+
