@@ -67,10 +67,10 @@ def main():
     volatility_list.sort(key=lambda x: x[1], reverse=True)
     print('Максимальная волатильность:')
     for i in range(3):
-        print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+        print(f'{volatility_list[i][0]}  -  {round(volatility_list[i][1], 2)} %')
     print('Минимальная волатильность:')
     for i in range(-3, 0):
-        print(f'{volatility_list[i][0]}  -  {volatility_list[i][1]}')
+        print(f'{volatility_list[i][0]}  -  {round(volatility_list[i][1], 2)} %')
     print('Нулевая волатильность:')
     for i in range(len(zero_volatility)):
         print(f'{zero_volatility[i]}', end=', ')
