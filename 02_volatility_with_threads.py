@@ -28,7 +28,7 @@ class Volatility(threading.Thread):
         super().__init__(*args, **kwargs)
         self.file = file
         self.volatility = None
-        self.volatility_secid = None
+        self.tiker_secid = None
 
     def run(self):
         max_number = float(0)
@@ -42,7 +42,7 @@ class Volatility(threading.Thread):
                     min_number = float(row["PRICE"])
             average_price = (max_number + min_number) / 2
             self.volatility = (max_number - min_number) / average_price * 100
-            self.volatility_secid = row["SECID"]
+            self.tiker_secid = row["SECID"]
 
 
 scan_folder = '/home/xomia4iwe/projects/My_Projects/lesson_012/trades/'
@@ -58,12 +58,10 @@ def main():
         volatylity.start()
     for volatylity in volatilitys:
         volatylity.join()
-        if volatylity.volatility is None:
-            pass
-        elif volatylity.volatility == 0:
-            zero_volatility.append(volatylity.volatility_secid)
+        if volatylity.volatility == 0:
+            zero_volatility.append(volatylity.tiker_secid)
         else:
-            volatility_list.append([volatylity.volatility_secid, volatylity.volatility])
+            volatility_list.append([volatylity.tiker_secid, volatylity.volatility])
     volatility_list.sort(key=lambda x: x[1], reverse=True)
     print('Максимальная волатильность:')
     for i in range(3):
